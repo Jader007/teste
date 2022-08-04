@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Tarefas</title>
+    <style>
+      body {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-image: url("https://tm.ibxk.com.br/2016/09/13/13162448904561.jpg");
+        font-family: "Kanit", sans-serif;
+      }
+
+      .board {
+        display: flex;
+        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0.8);
+        width: 300px;
+        margin: 10px;
+      }
+
+      .add-card {
+        background-color: rgba(200, 200, 255, 0.9);
+        margin: 5px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .add-card p {
+        font-size: 16px;
+        padding: 0 6px;
+        font-weight: 100;
+      }
+
+      h3 {
+        background-color: green;
+        margin: 0;
+        text-align: center;
+        font-size: 24px;
+      }
+
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+        list-style-type: none;
+        min-height: 300px;
+        padding: 2px;
+        align-content: flex-start;
+      }
+
+      li {
+        background-color: white;
+        box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+        min-width: 100px;
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 4px 10px;
+        padding: 8px;
+      }
+
+      li:hover {
+        cursor: move;
+      }
+
+      .remove {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 12px;
+        color: red;
+      }
+
+      .remove:hover {
+        cursor: pointer;
+        background-color: rgb(230, 190, 11);
+      }
+
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="board">
+      <h3>A fazer</h3>
+
+      <ul
+        id="tarefa_a_fazer"
+        ondrop="drop(event, this.id)"
+        ondragover="over(event)"
+      >
+        <li id="1" draggable="true" ondragstart="drag(event)">
+          <p>Dormir</p>
+          <p class="remove" onclick="removeCard(this)">x</p>
+        </li>
+      </ul>
+
+      <div class="add-card" onclick="addCard(this)">
+        <p>Adicionar Tarefa</p>
+      </div>
+    </div>
+
+    <div class="board">
+      <h3>Em andamento</h3>
+
+      <ul
+        id="tarefa_em_andamento"
+        ondrop="drop(event, this.id)"
+        ondragover="over(event)"
+      ></ul>
+
+      <div class="add-card" onclick="addCard(this)">
+        <p>Adicionar Tarefa</p>
+      </div>
+    </div>
+
+    <div class="board">
+      <h3>Concluida</h3>
+
+      <ul
+        id="tarefa_concluida"
+        ondrop="drop(event, this.id)"
+        ondragover="over(event)"
+      ></ul>
+
+      <div class="add-card" onclick="addCard(this)">
+        <p>Adicionar Tarefa</p>
+      </div>
+    </div>
+
+    <script>
+      function addCard(elemento) {
+        const text = prompt("Qual é a tarefa?");
+        const ulID = elemento.previousElementSibling.id;
+        const board = document.getElementById(ulID);
+
+        const template = `
+          <li id="${new Date().getTime()}${Math.floor(
+          Math.random() * 10
+        )}" draggable="true" ondragstart="drag(event)">
+            <p>${text}</p>
+            <p class="remove" onclick="removeCard(this)">x</p>
+          </li>
+          `;
+
+        board.innerHTML = board.innerHTML + template;
+      }
+
+      function removeCard(elemento) {
+        document.getElementById(elemento.parentElement.id).remove();
+      }
+
+      function drag(event) {
+        event.dataTransfer.setData("card", event.target.id);
+      }
+
+      function over(event) {
+        event.preventDefault();
+      }
+
+      function drop(event, id) {
+        event.preventDefault();
+        const target = document.getElementById(id);
+        const data = event.dataTransfer.getData("card");
+        const card = document.getElementById(data);
+        target.appendChild(card);
+        event.dataTransfer.clearData();
+      }
+    </script>
+  </body>
+</html>
